@@ -14,11 +14,6 @@ This installs the latest versions and writes them into `package.json`. Record th
 - mongoose: v9.12.3
 - serverless-http: v4.0.0
 
-Create `.env` (git-ignored) containing:
-
-```
-
-```
 
 ## Run locally
 
