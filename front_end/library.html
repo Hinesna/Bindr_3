@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#232323">
+  <title>Bind.R - Your Binder</title>
+
+  <!-- One <link> per family so a problem with one font can never block the others. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Iosevka+Charon:wght@400;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="page-library">
+  <header class="site-header">
+    <h1 class="logo">Bind<span class="logo-accent">.R</span></h1>
+    <p class="welcome">Welcome back,<br><strong id="username" class="username"></strong></p>
+    <button type="button" id="logout" class="btn btn-accent btn-small">Log Out</button>
+  </header>
+
+  <main class="wrap">
+    <!-- Static input section -->
+    <section class="add-section" aria-labelledby="form-title">
+      <h2 id="form-title" class="section-title">Add a Card</h2>
+
+      <form id="card-form" class="card-form" novalidate>
+        <input type="hidden" name="id" id="card-id">
+
+        <div class="card-form-fields">
+          <div class="field">
+            <label for="card-name">Name (required)</label>
+            <input id="card-name" name="name" type="text" required maxlength="100">
+            <span id="card-name-error" class="error" aria-live="polite"></span>
+          </div>
+
+          <div class="field">
+            <label for="card-rarity">Rarity</label>
+            <input id="card-rarity" name="rarity" type="text" maxlength="50" list="rarity-options">
+            <datalist id="rarity-options">
+              <option value="Common">
+              <option value="Uncommon">
+              <option value="Rare">
+              <option value="Epic">
+              <option value="Legendary">
+            </datalist>
+            <span id="card-rarity-error" class="error" aria-live="polite"></span>
+          </div>
+
+          <div class="field">
+            <label for="card-element">Element / Card Type (required)</label>
+            <input id="card-element" name="element" type="text" required maxlength="50">
+            <span id="card-element-error" class="error" aria-live="polite"></span>
+          </div>
+
+          <div class="field">
+            <label for="card-set">Card Set</label>
+            <input id="card-set" name="setRelease" type="text" maxlength="100">
+            <span id="card-set-error" class="error" aria-live="polite"></span>
+          </div>
+
+          <p id="card-form-message" class="error form-message" role="alert"></p>
+          <div class="form-actions">
+            <button type="submit" id="submit-button" class="btn btn-grow">Add To Your Binder!</button>
+            <button type="button" id="cancel-edit" class="btn btn-light" hidden>Cancel</button>
+          </div>
+        </div>
+
+        <div class="card-form-image">
+          <!-- The file input stays in the form (for validation and keyboard use);
+               the picture placeholder is its clickable label. -->
+          <div class="image-picker">
+            <input id="card-image" name="image" type="file" class="visually-hidden"
+                   accept="image/png,image/jpeg,image/webp,image/gif">
+            <label for="card-image" id="image-drop" class="image-drop">
+              <img id="image-preview" class="image-preview" alt="Preview of the selected image" hidden>
+              <span id="image-placeholder" class="image-placeholder">
+                <span class="image-icon" aria-hidden="true"></span>
+                <span class="image-prompt">Click me to add an image!</span>
+              </span>
+            </label>
+          </div>
+          <span id="card-image-error" class="error" aria-live="polite"></span>
+
+          <div id="remove-image-row" class="remove-image-row" hidden>
+            <label for="remove-image">
+              <input id="remove-image" name="removeImage" type="checkbox"> Remove Current Image?
+            </label>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- Search panel sits on top of the binder -->
+    <section class="library-section" aria-labelledby="search-title">
+      <div class="search-panel">
+        <h2 id="search-title" class="section-title">Search in your Bind.R</h2>
+        <form id="search-form" class="search-form">
+          <div class="search-fields">
+            <div class="field">
+              <label for="search-q">Name</label>
+              <input id="search-q" name="q" type="search" maxlength="100">
+            </div>
+            <div class="field">
+              <label for="search-element">Element / Type</label>
+              <input id="search-element" name="element" type="search" maxlength="50">
+            </div>
+            <div class="field">
+              <label for="search-rarity">Rarity</label>
+              <input id="search-rarity" name="rarity" type="search" maxlength="50">
+            </div>
+            <div class="field">
+              <label for="search-set">Card Set</label>
+              <input id="search-set" name="set" type="search" maxlength="100">
+            </div>
+          </div>
+          <div class="form-actions form-actions-center">
+            <button type="submit" class="btn">Search</button>
+            <button type="reset" id="search-reset" class="btn btn-light">Clear</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Binder: static black cover; each page (leaf) is a translucent
+           plastic sheet holding a 3x3 grid of card pockets and is what flips. -->
+      <div id="book" class="binder"></div>
+    </section>
+
+    <p id="library-message" class="library-message" role="status"></p>
+
+    <nav class="pager" aria-label="Binder pages">
+      <button type="button" id="prev-page" class="btn pager-btn">
+        <span class="pager-label">Prev Page</span>
+        <span class="pager-arrow pager-arrow-prev" aria-hidden="true"></span>
+      </button>
+      <p id="page-indicator" class="page-indicator"><span>Page</span> <span id="page-count">1 of 1</span></p>
+      <button type="button" id="next-page" class="btn pager-btn">
+        <span class="pager-label">Next Page</span>
+        <span class="pager-arrow pager-arrow-next" aria-hidden="true"></span>
+      </button>
+    </nav>
+  </main>
+
+  <!-- Base structure of one library entry: image first, text below -->
+  <template id="card-template">
+    <div class="pocket">
+      <article class="card" data-id="">
+        <div class="card-image"><img alt="" hidden></div>
+        <dl class="card-details">
+          <dt class="visually-hidden">Name</dt>
+          <dd class="name"></dd>
+          <dt class="label">Rarity</dt>
+          <dd class="rarity"></dd>
+          <dt class="label set-label">Card Set</dt>
+          <dd class="set"></dd>
+          <dt class="visually-hidden">Element / Type</dt>
+          <dd class="element"></dd>
+        </dl>
+        <div class="card-actions">
+          <button type="button" class="edit">Edit</button>
+          <button type="button" class="delete">Delete</button>
+        </div>
+      </article>
+    </div>
+  </template>
+
+  <script type="module" src="js/library.js"></script>
+</body>
+</html>

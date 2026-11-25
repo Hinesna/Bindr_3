@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#232323">
+  <title>Bind.R - Log in</title>
+
+  <!-- One <link> per family so a problem with one font can never block the others. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Iosevka+Charon:wght@400;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="page-login">
+  <header class="site-header">
+    <h1 class="logo">Bind<span class="logo-accent">.R</span></h1>
+  </header>
+
+  <main class="wrap">
+    <section class="intro">
+      <h2 class="intro-title">Welcome to Bind.R!</h2>
+      <p>This app lets you curate a library of your own trading cards of any kind! You can add the Name, Rarity, Card Type, Set of Origin, and even an image to help organize your personal binder.</p>
+      <p><a class="accent-link" href="#login-username">Log In</a> or <a class="accent-link" href="#register-username">Sign Up</a> to start building your Bind.R!</p>
+    </section>
+
+    <div class="login-panels">
+      <section class="panel" aria-labelledby="login-title">
+        <h2 id="login-title" class="panel-title">Log in</h2>
+        <form id="login-form" novalidate>
+          <div class="field">
+            <label for="login-username">Username</label>
+            <input id="login-username" name="username" type="text" required
+                   pattern="[a-z0-9_]{3,24}" autocomplete="username"
+                   title="3-24 characters: lowercase letters, numbers, underscore">
+            <span id="login-username-error" class="error" aria-live="polite"></span>
+          </div>
+
+          <div class="field">
+            <label for="login-password">Password</label>
+            <input id="login-password" name="password" type="password" required
+                   minlength="8" autocomplete="current-password">
+            <span id="login-password-error" class="error" aria-live="polite"></span>
+          </div>
+
+          <p id="login-message" class="error form-message" role="alert"></p>
+          <div class="form-actions form-actions-center">
+            <button type="submit" class="btn btn-accent">Log In</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel" aria-labelledby="register-title">
+        <h2 id="register-title" class="panel-title panel-title-accent">Sign Up</h2>
+        <form id="register-form" novalidate>
+          <div class="field">
+            <label for="register-username">Username</label>
+            <input id="register-username" name="username" type="text" required
+                   pattern="[a-z0-9_]{3,24}" autocomplete="username"
+                   title="3-24 characters: lowercase letters, numbers, underscore">
+            <span id="register-username-error" class="error" aria-live="polite"></span>
+          </div>
+
+          <div class="field">
+            <label for="register-password">Password (at least 8 characters)</label>
+            <input id="register-password" name="password" type="password" required
+                   minlength="8" maxlength="200" autocomplete="new-password">
+            <span id="register-password-error" class="error" aria-live="polite"></span>
+          </div>
+
+          <p id="register-message" class="error form-message" role="alert"></p>
+          <div class="form-actions form-actions-center">
+            <button type="submit" class="btn btn-accent">Create Account</button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <script type="module" src="js/login.js"></script>
+</body>
+</html>
